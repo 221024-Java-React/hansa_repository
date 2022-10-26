@@ -72,9 +72,22 @@ class PremiumCustomer extends Customer implements Premium{
 		return discount;
 	}
 	public void buy() {
-		super.items="";
+		try{
+			if(super.balance<discountPrice(super.cartCost)) {
+				throw new OverBalanceException("Insuficcient balance");
+				//throw new OverBalanceException();
+			}
+			else {
+				super.items="";
+				super.balance=super.balance-discountPrice(super.cartCost);
+				super.cartCost = 0.0;
+			}
+		} catch (OverBalanceException err) {
+		    
+		}
+		/*super.items="";
 		super.balance=super.balance-discountPrice(super.cartCost);
-		super.cartCost = 0.0;
+		super.cartCost = 0.0;*/
 	}
 	public int getVipCard() {
 		return this.vipCard;
@@ -99,10 +112,10 @@ class PremiumCustomer extends Customer implements Premium{
 public class Lab6 {
 
 	public static void main(String[] args) {
-		PremiumCustomer customer = new PremiumCustomer("Hassan", 250.43, "celery brocolli fries", 56.89, 12345, 3);
+		/*PremiumCustomer customer = new PremiumCustomer("Hassan", 250.43, "celery brocolli fries", 56.89, 12345, 3);
 		System.out.println(customer.toString());
 		customer.buy();
-		System.out.println(customer.toString());
+		System.out.println(customer.toString());*/
 	}
 
 }
