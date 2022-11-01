@@ -1,14 +1,20 @@
 package com.revature.models;
 
 public class Ticket {
+	
+	enum posibility {
+	    pending,
+	    approved,
+	    denied
+	}
 	private int amount;
 	private String description;
-	private boolean status;
+	private posibility status;
 	
-	public Ticket(int amount, String description, boolean status) {
+	public Ticket(int amount, String description) {
 		this.amount = amount;
 		this.description = description;
-		this.status = status;
+		this.status = posibility.pending;
 	}
 
 	public int getAmount() {
@@ -27,11 +33,11 @@ public class Ticket {
 		this.description = description;
 	}
 	
-	public boolean getStatus() {
+	public posibility getStatus() {
 		return status;
 	}
 
-	public void setStatus(boolean status) {
+	public void setStatus(posibility status) {
 		this.status = status;
 	}
 }
