@@ -1,6 +1,7 @@
 package com.revature.dao;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 import com.revature.models.Employee;
@@ -26,6 +27,10 @@ public class TicketDaoFile implements TicketDao{
 		
 		io.writeObject(pList);
 	}
+	public Ticket getTicket() {
+		Ticket out = new Ticket(0.00,"ouch");
+		return out;
+	}
 	public List<Ticket> getAllTickets(){
 		List<Ticket> pList = io.readObject();
 		
@@ -35,11 +40,10 @@ public class TicketDaoFile implements TicketDao{
 		
 		return pList;
 	}
-	/*
-	public void deleteTicket(String email) {
-		
+	public List<Ticket> getEmployeeTickets(String email, String password){
+		List<Ticket> tickets = new LinkedList<>();
+		return tickets;
 	}
-	*/
 	public void updateTicket(Ticket p) {
 		List<Ticket> pList = io.readObject();
 		
@@ -57,5 +61,9 @@ public class TicketDaoFile implements TicketDao{
 		
 		//Instead of returning null, throw a new exception
 		throw new TicketDoesNotExistException();
+	}
+	
+	public void updateTicket(String email, String password, String employee) {
+		return;
 	}
 }

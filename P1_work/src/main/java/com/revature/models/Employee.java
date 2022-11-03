@@ -1,15 +1,19 @@
 package com.revature.models;
 
 import java.io.Serializable;
+import java.util.Queue;
+import java.util.LinkedList;
 
-public class Employee implements Serializable{
-	private static final long serialVersionUID = 1L;
+public class Employee {/*implements Serializable{
+	private static final long serialVersionUID = 1L;*/
 	
 	private String firstName;
 	private String lastName;
-	private boolean manager;
+	private EmployeeType role;
 	private String email;
 	private String password;
+	private LinkedList<Ticket> pendingTickets;
+	private LinkedList<Ticket> processedTickets;
 	
 	public Employee() {
 		super();
@@ -19,18 +23,49 @@ public class Employee implements Serializable{
 		super();
 		this.firstName = firstName;
 		this.lastName = lastName;
-		this.manager = false;
+		this.role = EmployeeType.employee;
 		this.email = email;
 		this.password = password;
+		Queue<Integer> pendingTickets = new LinkedList<>();
+		LinkedList<Ticket> processedTickets = new LinkedList<>();
 	}
 	
-	public Employee(String firstName, String lastName, boolean manager, String email, String password) {
+	public Employee(String firstName, String lastName, EmployeeType role, String email, String password) {
 		super();
 		this.firstName = firstName;
 		this.lastName = lastName;
-		this.manager = manager;
+		this.role = role;
 		this.email = email;
 		this.password = password;
+		Queue<Integer> pendingTickets = new LinkedList<>();
+		LinkedList<Ticket> processedTickets = new LinkedList<>();
+	}
+	
+	public void submitTicket(double amount, String description) {
+		Ticket submission = new Ticket(amount,description);
+		this.pendingTickets.add(submission);
+	}
+	
+	public Ticket getTicket() {
+		return pendingTickets.peek();
+	}
+	
+	public LinkedList<Ticket> getAllTicket() {
+		LinkedList<Ticket> allTickets = new LinkedList<>();
+		allTickets.addAll(pendingTickets);
+		allTickets.addAll(processedTickets);
+		return allTickets;
+	}
+	
+	public void updateTicket(TicketStatus status) {
+		if(pendingTickets.size()<=0) {
+			//might wanna set up a logback
+			return;
+		}
+		Ticket updatedTicket = pendingTickets.getFirst();
+		updatedTicket.setStatus(status);
+		processedTickets.add(updatedTicket);
+		pendingTickets.remove();
 	}
 
 	public String getFirstName() {
@@ -49,12 +84,12 @@ public class Employee implements Serializable{
 		this.lastName = lastName;
 	}
 
-	public boolean isManager() {
-		return manager;
+	public EmployeeType isManager() {
+		return role;
 	}
 
-	public void setFaculty(boolean manager) {
-		this.manager = manager;
+	public void setManager(EmployeeType manager) {
+		this.role = manager;
 	}
 
 	public String getEmail() {

@@ -3,7 +3,9 @@ package com.revature.services;
 import java.util.List;
 
 import com.revature.dao.TicketDao;
+import com.revature.exceptions.EmployeeDoesNotExistException;
 import com.revature.exceptions.TicketDoesNotExistException;
+import com.revature.models.Employee;
 import com.revature.models.Ticket;
 import com.revature.utils.LoggingUtil;
 
@@ -18,19 +20,16 @@ public class TicketService {
 	}
 	
 	public void registerTicket(Ticket p) {
-		try {
-			ticketDao.getTicketByEmail(p.getEmail());
-			//Throw an exception if the user exists when trying to register
-			LoggingUtil.getLogger().warn("User with email " + p.getEmail() + " tried registering again");
-		} catch (TicketDoesNotExistException e) {
-			ticketDao.addTicket(p);
-			LoggingUtil.getLogger().info("New user registed");
-		}
+		ticketDao.addTicket(p);
 	
 	}
 	
-	public Ticket login(String email, String password) {
-		Ticket p = ticketDao.getTicketByEmail(email);
+	public Ticket getTicket() {
+		
+	}
+	
+	public void updateTicket(Ticket p, String update) {
+		Ticket p = employeeDao.getTicket();
 		
 		if(p == null) {
 			LoggingUtil.getLogger().warn("User with email " + email + " had a failed login attempt");
@@ -48,23 +47,7 @@ public class TicketService {
 			//System.out.println(password);
 			return null;
 		}
-	}
+		ticketDao.addTicket(p);
 	
-	/*public Ticket login(String email) {
-		Ticket p = ticketDao.getTicketByEmail(email);
-		
-		if(p == null) {
-			LoggingUtil.getLogger().warn("User with email " + email + " had a failed login attempt");
-			
-			return null;
-		}
-		
-		
-		LoggingUtil.getLogger().info("User " + email + " logged in");
-		return p;
-	}*/
-	
-	public List<Ticket> getAllRegistered(){
-		return ticketDao.getAllPeople();
 	}
 }

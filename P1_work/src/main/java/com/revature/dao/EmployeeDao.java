@@ -6,7 +6,7 @@ import com.revature.models.Employee;
 
 public interface EmployeeDao {
 	
-	public void addEmployee(Employee p);
+	public void addEmployee(Employee p) throws Exception;
 	public List<Employee> getAllPeople();
 	public Employee getEmployeeByEmail(String email);
 	public void deleteEmployee(String email);
