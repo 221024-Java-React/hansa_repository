@@ -4,12 +4,19 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.revature.models.Ticket;
 import com.revature.models.Employee;
+import com.revature.models.EmployeeType;
+import com.revature.models.Ticket;
 import com.revature.utils.JDBCConnectionUtil;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class EmployeeDaoJDBC implements EmployeeDao{
 	
@@ -21,7 +28,7 @@ public class EmployeeDaoJDBC implements EmployeeDao{
 		//We need a connection to create a statment
 		Connection connection = conUtil.getConnection();
 			
-		int type = p.getType().ordinal() + 1;
+		int type = p.isManager().ordinal() + 1;
 			
 		//The actual SQL query we want to execute
 		String sql = "INSERT INTO employee (type, first_name, last_name, email, password) VALUES"
@@ -60,9 +67,9 @@ public class EmployeeDaoJDBC implements EmployeeDao{
 				p.setId(result.getInt(1));
 				
 				if(result.getInt(2) == 1) {
-					p.setType(EmployeeType.TEACHER);
+					p.setManager(EmployeeType.manager);
 				}else {
-					p.setType(EmployeeType.STUDENT);
+					p.setManager(EmployeeType.employee);
 				}
 				
 				p.setFirstName(result.getString(3));
@@ -100,9 +107,9 @@ public class EmployeeDaoJDBC implements EmployeeDao{
 				p.setId(result.getInt(1));
 				
 				if(result.getInt(2) == 1) {
-					p.setType(EmployeeType.TEACHER);
+					p.setManager(EmployeeType.manager);
 				}else {
-					p.setType(EmployeeType.STUDENT);
+					p.setManager(EmployeeType.employee);
 				}
 				
 				p.setFirstName(result.getString(3));
@@ -144,7 +151,7 @@ public class EmployeeDaoJDBC implements EmployeeDao{
 			
 			Connection connection = conUtil.getConnection();
 			
-			int type = p.getType().ordinal() + 1;
+			int type = p.isManager().ordinal() + 1;
 			
 			String sql = "UPDATE employee SET type ="  + type + ",first_name = '" + p.getFirstName() + 
 					"', last_name ='" + p.getLastName() + "', email='" + p.getEmail() + "', password='" +
@@ -182,9 +189,9 @@ public class EmployeeDaoJDBC implements EmployeeDao{
 				p.setId(result.getInt(1));
 				
 				if(result.getInt(2) == 1) {
-					p.setType(EmployeeType.TEACHER);
+					p.setManager(EmployeeType.manager);
 				}else {
-					p.setType(EmployeeType.STUDENT);
+					p.setManager(EmployeeType.employee);
 				}
 				
 				p.setFirstName(result.getString(3));

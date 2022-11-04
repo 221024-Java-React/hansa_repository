@@ -4,11 +4,17 @@ public class Ticket {
 	private double amount;
 	private String description;
 	private TicketStatus status;
+	private Employee person;
 	
-	public Ticket(double amount, String description) {
+	public Ticket() {
+		super();
+	}
+	
+	public Ticket(double amount, String description, Employee person) {
 		this.amount = amount;
 		this.description = description;
 		this.status = TicketStatus.pending;
+		this.person=person;
 	}
 
 	public double getAmount() {
@@ -29,6 +35,18 @@ public class Ticket {
 	
 	public TicketStatus getStatus() {
 		return status;
+	}
+	
+	public void setEmployee(Employee person) {
+		this.person = person;
+	}
+	
+	public Employee getEmployee() {
+		return person;
+	}
+	
+	public String getEmployeeEmail() {
+		return person.getEmail();
 	}
 	
 	public String getStatusString() {
@@ -58,7 +76,7 @@ public class Ticket {
 	}
 	
 	public String toString() {
-		return "Ticket [amount=" + amount + ", description=" + description + ", status=" + getStatusString()
+		return "Ticket [email=" + person.getEmail() + "amount=" + amount + ", description=" + description + ", status=" + getStatusString()
 				//+ ", password=" + password + "]";
 				+ "]";
 	}

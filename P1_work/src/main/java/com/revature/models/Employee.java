@@ -7,16 +7,33 @@ import java.util.LinkedList;
 public class Employee {/*implements Serializable{
 	private static final long serialVersionUID = 1L;*/
 	
+	int id;
 	private String firstName;
 	private String lastName;
 	private EmployeeType role;
 	private String email;
 	private String password;
+	/*
 	private LinkedList<Ticket> pendingTickets;
 	private LinkedList<Ticket> processedTickets;
+	*/
 	
 	public Employee() {
 		super();
+	}
+	
+	public Employee(int id, String firstName, String lastName, String email, String password) {
+		super();
+		this.id=id;
+		this.firstName = firstName;
+		this.lastName = lastName;
+		this.role = EmployeeType.employee;
+		this.email = email;
+		this.password = password;
+		/*
+		Queue<Integer> pendingTickets = new LinkedList<>();
+		LinkedList<Ticket> processedTickets = new LinkedList<>();
+		*/
 	}
 	
 	public Employee(String firstName, String lastName, String email, String password) {
@@ -26,8 +43,10 @@ public class Employee {/*implements Serializable{
 		this.role = EmployeeType.employee;
 		this.email = email;
 		this.password = password;
+		/*
 		Queue<Integer> pendingTickets = new LinkedList<>();
 		LinkedList<Ticket> processedTickets = new LinkedList<>();
+		*/
 	}
 	
 	public Employee(String firstName, String lastName, EmployeeType role, String email, String password) {
@@ -37,10 +56,20 @@ public class Employee {/*implements Serializable{
 		this.role = role;
 		this.email = email;
 		this.password = password;
+		/*
 		Queue<Integer> pendingTickets = new LinkedList<>();
 		LinkedList<Ticket> processedTickets = new LinkedList<>();
+		*/
 	}
 	
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+	/*
 	public void submitTicket(double amount, String description) {
 		Ticket submission = new Ticket(amount,description);
 		this.pendingTickets.add(submission);
@@ -67,7 +96,7 @@ public class Employee {/*implements Serializable{
 		processedTickets.add(updatedTicket);
 		pendingTickets.remove();
 	}
-
+	*/
 	public String getFirstName() {
 		return firstName;
 	}

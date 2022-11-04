@@ -1,5 +1,4 @@
 package com.revature.dao;
-import com.revature.models.Ticket;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -8,45 +7,70 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.revature.models.Ticket;
 import com.revature.models.Employee;
 import com.revature.utils.JDBCConnectionUtil;
 
 public class TicketDaoJDBC implements TicketDao {
 	private JDBCConnectionUtil conUtil = JDBCConnectionUtil.getInstance();
-
-	@Override
-	public List<Course> readAllCourses() {
-		
-		List<Course> cList = new ArrayList();
+	
+	public void addTicket(Employee p, Ticket t) {
+			try {
+			
+			Connection connection = conUtil.getConnection();
+			
+			String sql = "INSERT INTO ticket(employee_email,description,amount,status)"
+					+ "VALUES (?,?,?,?)";
+			
+			PreparedStatement prepared = connection.prepareStatement(sql);
+			
+			//Now we need to set these parameters
+			prepared.setString(1, p.getEmail());
+			prepared.setString(2, t.getDescription());
+			prepared.setDouble(3, t.getAmount());
+			prepared.setString(4, t.getStatusString());
+			
+			prepared.execute();
+			
+		} catch(SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public List<Ticket> getAllTickets(){
+		List<Ticket> cList = new ArrayList();
 		
 		try {
 			
 			Connection connection = conUtil.getConnection();
 			
-			String sql = "SELECT * FROM courses";
+			String sql = "SELECT * FROM ticket";
+			
+			/*
+			 String sql = "INSERT INTO ticket(employee_email,description,amount,status)"
+					+ "VALUES (?,?,?,?)";
+			 */
 			
 			PreparedStatement prepared = connection.prepareStatement(sql);
 			
 			ResultSet result = prepared.executeQuery();
 			
 			while(result.next()) {
-				Course c = new Course();
+				Ticket t = new Ticket();
 				
-				c.setCourseId(result.getInt(1));
-				c.setSubject(result.getString(2));
-				c.setCourseNumber(result.getInt(3));
-				c.setCourseName(result.getString(4));
-				
-				if(result.getObject(5) == null) {
-					c.setTeacher(null);
+				if(result.getObject(1) == null) {
+					t.setEmployee(null);
 				} else {
 					//Take the lazy route, and just store the teachers id
-					Person t = new Person();
-					t.setId(result.getInt(5));
-					c.setTeacher(t);
+					Employee p = new Employee();
+					p.setEmail(result.getString(1));
+					t.setEmployee(p);
 				}
+				t.setDescription(result.getString(2));
+				t.setAmount(result.getDouble(3));
+				t.setStatus(result.getString(4));
 				
-				cList.add(c);
+				cList.add(t);
 			}
 			
 		} catch(SQLException e) {
@@ -56,81 +80,79 @@ public class TicketDaoJDBC implements TicketDao {
 
 		return cList;
 	}
-
-	@Override
-	public void createCourse(Course c) {
+	
+	public List<Ticket> getEmployeeTickets(String email){
+		List<Ticket> cList = new ArrayList();
 		
 		try {
 			
 			Connection connection = conUtil.getConnection();
 			
-			String sql = "INSERT INTO courses(subject, course_number, name, teacher)"
+			String sql = "SELECT * FROM ticket where employee_email = " + email + "'";
+			
+			/*
+			 String sql = "INSERT INTO ticket(employee_email,description,amount,status)"
 					+ "VALUES (?,?,?,?)";
+			 */
 			
 			PreparedStatement prepared = connection.prepareStatement(sql);
 			
-			//Now we need to set these parameters
-			prepared.setString(1,  c.getSubject());
-			prepared.setInt(2, c.getCourseNumber());
-			prepared.setString(3, c.getCourseName());
-			prepared.setNull(4, java.sql.Types.INTEGER);
+			ResultSet result = prepared.executeQuery();
 			
-			prepared.execute();
-			
-		} catch(SQLException e) {
-			e.printStackTrace();
-		}
-		
-	}
-
-	@Override
-	public void deleteCourse(int id) {
-		try {
-			
-			Connection connection = conUtil.getConnection();
-			
-			String sql = "DELETE FROM courses WHERE course_id=?";
-			
-			PreparedStatement prepared = connection.prepareStatement(sql);
-			
-			prepared.setInt(1, id);
-			
-			prepared.execute();
-			
-		} catch(SQLException e) {
-			e.printStackTrace();
-		}
-		
-	}
-
-	@Override
-	public void updateCourse(Course c) {
-
-		try {
-			
-			Connection connection = conUtil.getConnection();
-			
-			String sql = "UPDATE courses SET subject = ?, course_number = ?, name=?, teacher=? WHERE course_id = ?";
-			
-			PreparedStatement prepared = connection.prepareStatement(sql);
-			
-			prepared.setString(1, c.getSubject());
-			prepared.setInt(2, c.getCourseNumber());
-			prepared.setString(3, c.getCourseName());
-			
-			if(c.getTeacher() == null) {
-				prepared.setNull(4,  java.sql.Types.INTEGER);
-			}else {
-				 prepared.setInt(4, c.getTeacher().getId());
+			while(result.next()) {
+				Ticket t = new Ticket();
+				
+				if(result.getObject(1) == null) {
+					t.setEmployee(null);
+				} else {
+					//Take the lazy route, and just store the teachers id
+					Employee p = new Employee();
+					p.setEmail(result.getString(1));
+					t.setEmployee(p);
+				}
+				t.setDescription(result.getString(2));
+				t.setAmount(result.getDouble(3));
+				t.setStatus(result.getString(4));
+				
+				cList.add(t);
 			}
 			
-			prepared.setInt(5, c.getCourseId());
+		} catch(SQLException e) {
+			e.printStackTrace();
+		}
+		
+
+		return cList;
+	}
+	
+	public void updateTicket(Ticket t) {
+		try {
+			
+			Connection connection = conUtil.getConnection();
+			
+			/*
+			 String sql = "INSERT INTO ticket(employee_email,description,amount,status)"
+					+ "VALUES (?,?,?,?)";
+			 */
+			
+			String sql = "UPDATE ticket SET employee_email = ?, description = ?, amount=?, status=? "
+					+ "WHERE employee_email = ? and description = ? and amount=?";
+			
+			PreparedStatement prepared = connection.prepareStatement(sql);
+			
+			prepared.setString(1, t.getEmployeeEmail());
+			prepared.setString(2, t.getDescription());
+			prepared.setDouble(3, t.getAmount());
+			prepared.setString(4, t.getStatusString());
+			prepared.setString(5, t.getEmployeeEmail());
+			prepared.setString(6, t.getDescription());
+			prepared.setDouble(7, t.getAmount());
+			
 			
 			prepared.execute();
 			
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		
 	}
 }

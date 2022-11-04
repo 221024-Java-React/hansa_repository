@@ -38,6 +38,15 @@ public class EmployeeDaoFile implements EmployeeDao {
 		
 		return pList;
 	}
+	public List<Employee> getAllPeoplePassword() {
+		List<Employee> pList = io.readObject();
+		
+		if(pList == null) {
+			pList = new ArrayList<>();
+		}
+		
+		return pList;
+	}
 
 	@Override
 	public Employee getEmployeeByEmail(String email) {
@@ -96,6 +105,11 @@ public class EmployeeDaoFile implements EmployeeDao {
 		
 		//Instead of returning null, throw a new exception
 		throw new EmployeeDoesNotExistException();
+	}
+	
+	public Employee getEmployeeById(int id) {
+		Employee p = null;
+		return p;
 	}
 
 }

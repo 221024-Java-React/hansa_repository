@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.revature.models.Employee;
 import com.revature.models.Ticket;
 import com.revature.services.TicketService;
 
@@ -27,9 +28,10 @@ public class TicketController {
 		//When we register a person, we will send over information about that person in the body of the request
 		//To get access to that body we use context.body()
 		//To convert our body to a java object we will use the object mapper
-		Ticket p = objectMapper.readValue(context.body(), Ticket.class);
+		Ticket t = objectMapper.readValue(context.body(), Ticket.class);
+		Employee p = objectMapper.readValue(context.body(), Employee.class);
 		
-		pServ.registerTicket(p);
+		pServ.addTicket(p, t);
 		
 		//Set our status code to OK
 		context.status(201);
@@ -38,7 +40,15 @@ public class TicketController {
 	};
 	
 	public Handler handleGetAll = (context) -> {
-		List<Ticket> pList = pServ.getAllRegistered();
+		List<Ticket> pList = pServ.getAllTickets();
+		
+		context.status(200);
+		context.result(objectMapper.writeValueAsString(pList));
+	};
+	
+	public Handler handleGetEmployeeTicket = (context) -> {
+		Ticket t = objectMapper.readValue(context.body(), Ticket.class);
+		List<Ticket> pList = pServ.getEmployeeTickets(t.getEmployeeEmail());
 		
 		context.status(200);
 		context.result(objectMapper.writeValueAsString(pList));

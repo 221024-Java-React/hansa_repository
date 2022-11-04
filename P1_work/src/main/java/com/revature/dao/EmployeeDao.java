@@ -11,5 +11,5 @@ public interface EmployeeDao {
 	public Employee getEmployeeByEmail(String email);
 	public void deleteEmployee(String email);
 	public void updateEmployee(Employee p);
-
+	public Employee getEmployeeById(int id);
 }

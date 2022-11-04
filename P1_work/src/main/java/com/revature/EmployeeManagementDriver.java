@@ -1,21 +1,32 @@
 package com.revature;
 
 import com.revature.controllers.EmployeeController;
+import com.revature.controllers.TicketController;
+import com.revature.dao.TicketDao;
+import com.revature.dao.TicketDaoJDBC;
 import com.revature.dao.FileIO;
 import com.revature.dao.EmployeeDao;
 import com.revature.dao.EmployeeDaoFile;
+import com.revature.dao.EmployeeDaoJDBC;
+import com.revature.exceptions.EmployeeAlreadyExistsException;
 import com.revature.exceptions.EmployeeDoesNotExistException;
 import com.revature.models.Employee;
+import com.revature.models.EmployeeType;
+import com.revature.services.TicketService;
 import com.revature.services.EmployeeService;
+import com.revature.exceptions.TicketDoesNotExistException;
 
 import io.javalin.Javalin;
 
 public class EmployeeManagementDriver {
 
 	public static void main(String[] args) {
-		EmployeeDao pDao = new EmployeeDaoFile();
+		EmployeeDao pDao = new EmployeeDaoJDBC();
 		EmployeeService pServ = new EmployeeService(pDao);
 		EmployeeController pController = new EmployeeController(pServ);
+		TicketDao tDao = new TicketDaoJDBC();
+		TicketService tServ = new TicketService(tDao, pDao);
+		TicketController tController = new TicketController(tServ);
 		
 		//Setup our javalin app and routes
 		Javalin app = Javalin.create(config -> {
@@ -32,7 +43,8 @@ public class EmployeeManagementDriver {
 		app.post("/employee/register", pController.handleRegister);
 		app.get("/employee/", pController.handleGetAll);
 		app.post("employee/login", pController.handleLogin);
-		//app.post("ticket/", pController.handleLogin);
+		app.post("ticket/register", pController.handleLogin);
+		app.get("ticket/update", pController.handleLogin);
 		
 		/*
 		//We can also register handlers to deal with exceptions
