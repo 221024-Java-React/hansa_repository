@@ -14,20 +14,23 @@ import com.revature.utils.JDBCConnectionUtil;
 public class TicketDaoJDBC implements TicketDao {
 	private JDBCConnectionUtil conUtil = JDBCConnectionUtil.getInstance();
 	
-	public void addTicket(Employee p, Ticket t) {
-			try {
+	public void addTicket(Ticket t) {
+		try {
 			
 			Connection connection = conUtil.getConnection();
 			
-			String sql = "INSERT INTO ticket(employee_email,description,amount,status)"
+			//int type = t.getStatus().ordinal() + 1;
+			//String status=t.getStatusString();
+			
+			String sql = "INSERT INTO ticket(amount, description, employee_email, status)"
 					+ "VALUES (?,?,?,?)";
 			
 			PreparedStatement prepared = connection.prepareStatement(sql);
 			
 			//Now we need to set these parameters
-			prepared.setString(1, p.getEmail());
+			prepared.setDouble(1, t.getAmount());
 			prepared.setString(2, t.getDescription());
-			prepared.setDouble(3, t.getAmount());
+			prepared.setString(3, t.getEmployee());
 			prepared.setString(4, t.getStatusString());
 			
 			prepared.execute();
@@ -58,17 +61,18 @@ public class TicketDaoJDBC implements TicketDao {
 			while(result.next()) {
 				Ticket t = new Ticket();
 				
-				if(result.getObject(1) == null) {
+				t.setId(result.getInt(1));
+				if(result.getString(2) == null) {
 					t.setEmployee(null);
 				} else {
 					//Take the lazy route, and just store the teachers id
-					Employee p = new Employee();
-					p.setEmail(result.getString(1));
-					t.setEmployee(p);
+					//Employee p = new Employee();
+					//t.setEmployee(result.getString(1));
+					t.setEmployee(result.getString(2));
 				}
-				t.setDescription(result.getString(2));
-				t.setAmount(result.getDouble(3));
-				t.setStatus(result.getString(4));
+				t.setDescription(result.getString(3));
+				t.setAmount(result.getDouble(4));
+				t.setStatus(result.getString(5));
 				
 				cList.add(t);
 			}
@@ -88,7 +92,7 @@ public class TicketDaoJDBC implements TicketDao {
 			
 			Connection connection = conUtil.getConnection();
 			
-			String sql = "SELECT * FROM ticket where employee_email = " + email + "'";
+			String sql = "SELECT * FROM ticket where employee_email = ?";
 			
 			/*
 			 String sql = "INSERT INTO ticket(employee_email,description,amount,status)"
@@ -97,22 +101,25 @@ public class TicketDaoJDBC implements TicketDao {
 			
 			PreparedStatement prepared = connection.prepareStatement(sql);
 			
+			prepared.setString(1, email);
+			
 			ResultSet result = prepared.executeQuery();
 			
 			while(result.next()) {
 				Ticket t = new Ticket();
 				
-				if(result.getObject(1) == null) {
+				t.setId(result.getInt(1));
+				if(result.getObject(2) == null) {
 					t.setEmployee(null);
 				} else {
 					//Take the lazy route, and just store the teachers id
-					Employee p = new Employee();
-					p.setEmail(result.getString(1));
-					t.setEmployee(p);
+					//Employee p = new Employee();
+					//t.setEmployee(result.getString(1));
+					t.setEmployee(result.getString(2));
 				}
-				t.setDescription(result.getString(2));
-				t.setAmount(result.getDouble(3));
-				t.setStatus(result.getString(4));
+				t.setDescription(result.getString(3));
+				t.setAmount(result.getDouble(4));
+				t.setStatus(result.getString(5));
 				
 				cList.add(t);
 			}
@@ -125,7 +132,7 @@ public class TicketDaoJDBC implements TicketDao {
 		return cList;
 	}
 	
-	public void updateTicket(Ticket t) {
+	public void updateTicket(Ticket t, String newStatus) {
 		try {
 			
 			Connection connection = conUtil.getConnection();
@@ -135,18 +142,20 @@ public class TicketDaoJDBC implements TicketDao {
 					+ "VALUES (?,?,?,?)";
 			 */
 			
-			String sql = "UPDATE ticket SET employee_email = ?, description = ?, amount=?, status=? "
-					+ "WHERE employee_email = ? and description = ? and amount=?";
+			String sql = "UPDATE ticket SET status=? "
+					+ "WHERE ticketid = ? and status = ?";
 			
 			PreparedStatement prepared = connection.prepareStatement(sql);
 			
-			prepared.setString(1, t.getEmployeeEmail());
+			/*prepared.setString(1, t.getEmployee());
 			prepared.setString(2, t.getDescription());
-			prepared.setDouble(3, t.getAmount());
-			prepared.setString(4, t.getStatusString());
-			prepared.setString(5, t.getEmployeeEmail());
+			prepared.setDouble(3, t.getAmount());*/
+			prepared.setString(1, t.getStatusString());
+			/*prepared.setString(5, t.getEmployee());
 			prepared.setString(6, t.getDescription());
-			prepared.setDouble(7, t.getAmount());
+			prepared.setDouble(7, t.getAmount());*/
+			prepared.setDouble(2, t.getId());
+			prepared.setString(3, "pending");
 			
 			
 			prepared.execute();
@@ -154,5 +163,48 @@ public class TicketDaoJDBC implements TicketDao {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	public List<Ticket> getTicketsByStatus(String email,String status){
+		List<Ticket> cList = new ArrayList();
+		
+		try {
+			
+			Connection connection = conUtil.getConnection();
+			
+			String sql = "SELECT * FROM ticket where employee_email = ? and status = ?";
+			
+			PreparedStatement prepared = connection.prepareStatement(sql);
+			
+			prepared.setString(1, email);
+			prepared.setString(2, status);
+			
+			ResultSet result = prepared.executeQuery();
+			
+			while(result.next()) {
+				Ticket t = new Ticket();
+				
+				t.setId(result.getInt(1));
+				if(result.getObject(2) == null) {
+					t.setEmployee(null);
+				} else {
+					//Take the lazy route, and just store the teachers id
+					//Employee p = new Employee();
+					//t.setEmployee(result.getString(1));
+					t.setEmployee(result.getString(2));
+				}
+				t.setDescription(result.getString(3));
+				t.setAmount(result.getDouble(4));
+				t.setStatus(result.getString(5));
+				
+				cList.add(t);
+			}
+			
+		} catch(SQLException e) {
+			e.printStackTrace();
+		}
+		
+
+		return cList;
 	}
 }

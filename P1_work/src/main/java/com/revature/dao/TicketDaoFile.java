@@ -17,13 +17,13 @@ public class TicketDaoFile implements TicketDao{
 		this.io = new FileIO<List<Ticket>>("ticket.txt");
 	}
 	
-	public void addTicket(Ticket p, Ticket t) {
+	public void addTicket(Ticket t) {
 		List<Ticket> pList = io.readObject();
 		if(pList == null) {
 			pList = new ArrayList<>();
 		}
 		
-		pList.add(p);
+		pList.add(t);
 		
 		io.writeObject(pList);
 	}
@@ -44,7 +44,7 @@ public class TicketDaoFile implements TicketDao{
 		List<Ticket> tickets = new LinkedList<>();
 		return tickets;
 	}
-	public void updateTicket(Ticket p) {
+	public void updateTicket(Ticket p, String newString) {
 		List<Ticket> pList = io.readObject();
 		
 		if(pList == null) {
@@ -66,10 +66,8 @@ public class TicketDaoFile implements TicketDao{
 	public void updateTicket(String email, String password, String employee) {
 		return;
 	}
-
-	@Override
-	public void addTicket(Employee p, Ticket t) {
-		// TODO Auto-generated method stub
-		
+	public List<Ticket> getTicketsByStatus(String email,String status){
+		List<Ticket> tickets = new LinkedList<>();
+		return tickets;
 	}
 }

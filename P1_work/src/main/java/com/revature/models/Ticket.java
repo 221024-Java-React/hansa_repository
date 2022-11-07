@@ -1,20 +1,40 @@
 package com.revature.models;
 
 public class Ticket {
+	private int id;
 	private double amount;
 	private String description;
 	private TicketStatus status;
-	private Employee person;
+	//private Employee employee_email;
+	private String employee_email;
 	
 	public Ticket() {
 		super();
 	}
 	
-	public Ticket(double amount, String description, Employee person) {
+	//public Ticket(double amount, String description, Employee employee_email) {
+	public Ticket(double amount, String description, String employee_email) {
 		this.amount = amount;
 		this.description = description;
 		this.status = TicketStatus.pending;
-		this.person=person;
+		this.employee_email=employee_email;
+	}
+	
+	//public Ticket(int id, double amount, String description, Employee employee_email) {
+	public Ticket(int id, double amount, String description, String employee_email) {
+		this.id=id;
+		this.amount = amount;
+		this.description = description;
+		this.status = TicketStatus.pending;
+		this.employee_email=employee_email;
+	}
+	
+	public double getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
 	}
 
 	public double getAmount() {
@@ -37,17 +57,26 @@ public class Ticket {
 		return status;
 	}
 	
-	public void setEmployee(Employee person) {
-		this.person = person;
+	public String getEmployee() {
+		return employee_email;
+	}
+	
+	public void setEmployee(String employee_email) {
+		this.employee_email = employee_email;
+	}
+	
+	/*public void setEmployee(Employee employee_email) {
+		this.employee_email = employee_email;
 	}
 	
 	public Employee getEmployee() {
-		return person;
+		return employee_email;
 	}
 	
 	public String getEmployeeEmail() {
-		return person.getEmail();
+		return employee_email.getEmail();
 	}
+	*/
 	
 	public String getStatusString() {
 		if(status==TicketStatus.pending) {
@@ -73,10 +102,14 @@ public class Ticket {
 		else if(status.equals("denied")) {
 			this.status = TicketStatus.denied;
 		}
+		else {
+			this.status = TicketStatus.pending;
+		}
 	}
 	
 	public String toString() {
-		return "Ticket [email=" + person.getEmail() + "amount=" + amount + ", description=" + description + ", status=" + getStatusString()
+		//return "Ticket [email=" + employee_email.getEmail() + "amount=" + amount + ", description=" + description + ", status=" + getStatusString()
+		return "Ticket [email=" + employee_email + "amount=" + amount + ", description=" + description + ", status=" + this.getStatusString()
 				//+ ", password=" + password + "]";
 				+ "]";
 	}

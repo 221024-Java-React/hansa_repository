@@ -43,8 +43,12 @@ public class EmployeeManagementDriver {
 		app.post("/employee/register", pController.handleRegister);
 		app.get("/employee/", pController.handleGetAll);
 		app.post("employee/login", pController.handleLogin);
-		app.post("ticket/register", pController.handleLogin);
-		app.get("ticket/update", pController.handleLogin);
+		
+		app.post("/ticket/register", tController.handleRegister);
+		app.put("/ticket/update", tController.handleUpdate);
+		app.get("/ticket/", tController.handleGetAll);
+		app.get("/ticket/employee", tController.handleGetEmployeeTicket);
+		app.get("/ticket/previous", tController.handleGetPrevious);
 		
 		/*
 		//We can also register handlers to deal with exceptions

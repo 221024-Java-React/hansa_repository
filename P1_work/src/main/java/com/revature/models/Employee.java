@@ -7,7 +7,7 @@ import java.util.LinkedList;
 public class Employee {/*implements Serializable{
 	private static final long serialVersionUID = 1L;*/
 	
-	int id;
+	private int id;
 	private String firstName;
 	private String lastName;
 	private EmployeeType role;

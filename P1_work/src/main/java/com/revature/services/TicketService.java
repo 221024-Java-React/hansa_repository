@@ -33,7 +33,8 @@ public class TicketService {
 		for(int i=0; i<cList.size(); i++) {
 			Ticket c = cList.get(i);
 			if(c.getEmployee() != null) {
-				c.setEmployee(employeeDao.getEmployeeByEmail(c.getEmployeeEmail()));
+				//c.setEmployee(employeeDao.getEmployeeByEmail(c.getEmployeeEmail()));
+				c.setEmployee(c.getEmployee());
 				cList.set(i, c);
 			}
 		}
@@ -41,8 +42,8 @@ public class TicketService {
 		return cList;
 	}
 	
-	public void addTicket(Employee p, Ticket t) {
-		ticketDao.addTicket(p, t);
+	public void addTicket(Ticket t) {
+		ticketDao.addTicket(t);
 		LoggingUtil.getLogger().info("New ticket was created: " + t);
 	}
 	
@@ -52,7 +53,8 @@ public class TicketService {
 		for(int i=0; i<cList.size(); i++) {
 			Ticket c = cList.get(i);
 			if(c.getEmployee() != null) {
-				c.setEmployee(employeeDao.getEmployeeByEmail(c.getEmployeeEmail()));
+				//c.setEmployee(employeeDao.getEmployeeByEmail(c.getEmployeeEmail()));
+				c.setEmployee(c.getEmployee());
 				cList.set(i, c);
 			}
 		}
@@ -60,9 +62,23 @@ public class TicketService {
 		return cList;
 	}
 	
-	public void updateTicket(Ticket c) {
-		ticketDao.updateTicket(c);
+	public void updateTicket(Ticket c,String s) {
+		ticketDao.updateTicket(c,s);
 		LoggingUtil.getLogger().info("Ticket was updated: " + c);
 	}
-
+	
+	public List<Ticket> getTicketsByStatus(String email,String status){
+		List<Ticket> cList = ticketDao.getTicketsByStatus(email,status);
+		
+		for(int i=0; i<cList.size(); i++) {
+			Ticket c = cList.get(i);
+			if(c.getEmployee() != null) {
+				//c.setEmployee(employeeDao.getEmployeeByEmail(c.getEmployeeEmail()));
+				c.setEmployee(c.getEmployee());
+				cList.set(i, c);
+			}
+		}
+		
+		return cList;
+	}
 }
