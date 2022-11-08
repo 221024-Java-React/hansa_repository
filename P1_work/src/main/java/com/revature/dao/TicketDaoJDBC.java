@@ -4,11 +4,14 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
 import com.revature.models.Ticket;
+import com.revature.models.TicketStatus;
 import com.revature.models.Employee;
+import com.revature.models.EmployeeType;
 import com.revature.utils.JDBCConnectionUtil;
 
 public class TicketDaoJDBC implements TicketDao {
@@ -47,7 +50,7 @@ public class TicketDaoJDBC implements TicketDao {
 			
 			Connection connection = conUtil.getConnection();
 			
-			String sql = "SELECT * FROM ticket";
+			String sql = "SELECT * FROM ticket order by ticketID";
 			
 			/*
 			 String sql = "INSERT INTO ticket(employee_email,description,amount,status)"
@@ -165,6 +168,43 @@ public class TicketDaoJDBC implements TicketDao {
 		}
 	}
 	
+	public Ticket getTicketById(int id) {
+		Ticket p = null;
+		
+		try {
+			
+			Connection connection = conUtil.getConnection();
+			
+			String sql = "SELECT * FROM ticket WHERE ticketId='" + id + "'";
+			
+			Statement statement = connection.createStatement();
+			
+			ResultSet result = statement.executeQuery(sql);
+			
+			while(result.next()) {
+				p = new Ticket();
+				
+				p.setId(result.getInt(1));
+				p.setEmployee(result.getString(2));
+				p.setDescription(result.getString(3));
+				p.setAmount(result.getDouble(4));
+				if(result.getInt(5) == 1) {
+					p.setStatus(TicketStatus.approved);
+				}else if(result.getInt(5) == 2){
+					p.setStatus(TicketStatus.denied);
+				}
+				else {
+					p.setStatus(TicketStatus.pending);
+				}
+			}
+			
+		} catch(SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return p;
+	}
+	
 	public List<Ticket> getTicketsByStatus(String email,String status){
 		List<Ticket> cList = new ArrayList();
 		
@@ -172,7 +212,7 @@ public class TicketDaoJDBC implements TicketDao {
 			
 			Connection connection = conUtil.getConnection();
 			
-			String sql = "SELECT * FROM ticket where employee_email = ? and status = ?";
+			String sql = "SELECT * FROM ticket where employee_email = ? and status = ? order by ticketID";
 			
 			PreparedStatement prepared = connection.prepareStatement(sql);
 			

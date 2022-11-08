@@ -13,4 +13,5 @@ public interface TicketDao {
 	//public Ticket getTicket();
 	public void updateTicket(Ticket t, String newStatus);
 	public List<Ticket> getTicketsByStatus(String email,String status);
+	public Ticket getTicketById(int id);
 }

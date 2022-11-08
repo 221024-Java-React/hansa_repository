@@ -52,7 +52,7 @@ public class EmployeeDaoJDBC implements EmployeeDao{
 			//We need a connection to create a statment
 			Connection connection = conUtil.getConnection();
 			
-			String sql = "SELECT * FROM employee";
+			String sql = "SELECT * FROM employee order by employeeID";
 			
 			Statement statement = connection.createStatement();
 			

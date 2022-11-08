@@ -48,7 +48,7 @@ public class EmployeeManagementDriver {
 		app.put("/ticket/update", tController.handleUpdate);
 		app.get("/ticket/", tController.handleGetAll);
 		app.get("/ticket/employee", tController.handleGetEmployeeTicket);
-		app.get("/ticket/previous", tController.handleGetPrevious);
+		app.get("/ticket/status", tController.handleGetByStatus);
 		
 		/*
 		//We can also register handlers to deal with exceptions

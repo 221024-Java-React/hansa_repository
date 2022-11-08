@@ -40,7 +40,8 @@ public class TicketController {
 	};
 	
 	public Handler handleGetAll = (context) -> {
-		List<Ticket> pList = tServ.getAllTickets();
+		Map<String, String> body = objectMapper.readValue(context.body(), LinkedHashMap.class);
+		List<Ticket> pList = tServ.getAllTickets(body.get("email"), body.get("password"));
 		
 		context.status(200);
 		context.result(objectMapper.writeValueAsString(pList));
@@ -48,10 +49,16 @@ public class TicketController {
 	
 	
 	public Handler handleUpdate = (context) -> {
-		Ticket t = objectMapper.readValue(context.body(), Ticket.class);
-		String s = objectMapper.readValue(context.body(), String.class);
+		/*Ticket t = objectMapper.readValue(context.body(), Ticket.class);
+		String s = objectMapper.readValue(context.body(), String.class);*/
 		
-		tServ.updateTicket(t,s);
+		Map<String, String> body = objectMapper.readValue(context.body(), LinkedHashMap.class);
+		
+		//tServ.updateTicket(t,s);
+		//Employee loggedIn = pServ.login(body.get("email"), body.get("password"));
+		//Ticket t = new Ticket(Integer.parseInt(body.get("id")));
+		tServ.updateTicket(body.get("email"), body.get("password"),
+				Integer.parseInt(body.get("id")), body.get("status"));
 		
 		context.status(200);
 		context.result("Ticket updated");
@@ -59,16 +66,18 @@ public class TicketController {
 	
 	
 	public Handler handleGetEmployeeTicket = (context) -> {
-		Ticket t = objectMapper.readValue(context.body(), Ticket.class);
-		List<Ticket> pList = tServ.getEmployeeTickets(t.getEmployee());
+		//Ticket t = objectMapper.readValue(context.body(), Ticket.class);
+		Map<String, String> body = objectMapper.readValue(context.body(), LinkedHashMap.class);
+		List<Ticket> pList = tServ.getEmployeeTickets(body.get("email"), body.get("password"));
 		
 		context.status(200);
 		context.result(objectMapper.writeValueAsString(pList));
 	};
 	
-	public Handler handleGetPrevious = (context) -> {
-		Ticket t = objectMapper.readValue(context.body(), Ticket.class);
-		List<Ticket> pList = tServ.getTicketsByStatus(t.getEmployee(),t.getStatusString());
+	public Handler handleGetByStatus = (context) -> {
+		//Ticket t = objectMapper.readValue(context.body(), Ticket.class);
+		Map<String, String> body = objectMapper.readValue(context.body(), LinkedHashMap.class);
+		List<Ticket> pList = tServ.getTicketsByStatus(body.get("email"), body.get("password"),body.get("status"));
 		
 		context.status(200);
 		context.result(objectMapper.writeValueAsString(pList));

@@ -70,4 +70,8 @@ public class TicketDaoFile implements TicketDao{
 		List<Ticket> tickets = new LinkedList<>();
 		return tickets;
 	}
+	public Ticket getTicketById(int id) {
+		Ticket p = null;
+		return p;
+	}
 }
