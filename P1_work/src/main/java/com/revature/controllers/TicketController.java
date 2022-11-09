@@ -23,28 +23,38 @@ public class TicketController {
 	}
 	
 	public Handler handleRegister = (context) -> {
+		Map<String, String> body = objectMapper.readValue(context.body(), LinkedHashMap.class);
+		//Ticket t = objectMapper.readValue(context.body(), Ticket.class);
+		Ticket t = new Ticket(Double.parseDouble(body.get("amount")), body.get("description"), 
+				body.get("employee_email"));
 		
-		//Inside is the logic for our controller for this register
-		//When we register a person, we will send over information about that person in the body of the request
-		//To get access to that body we use context.body()
-		//To convert our body to a java object we will use the object mapper
-		Ticket t = objectMapper.readValue(context.body(), Ticket.class);
-		//Employee p = objectMapper.readValue(context.body(), Employee.class);
-		
-		tServ.addTicket(t);
-		
-		//Set our status code to OK
-		context.status(201);
-		context.result(objectMapper.writeValueAsString(t));
-		
+		int out = tServ.addTicket(t,body.get("password"));
+		if(out == 0) {
+			context.status(400);
+			context.result("Employee does not exist");
+		}
+		else if(out ==1){
+			context.status(201);
+			context.result(objectMapper.writeValueAsString(t));
+		}
+		else {
+			
+		}
 	};
 	
 	public Handler handleGetAll = (context) -> {
 		Map<String, String> body = objectMapper.readValue(context.body(), LinkedHashMap.class);
 		List<Ticket> pList = tServ.getAllTickets(body.get("email"), body.get("password"));
 		
-		context.status(200);
-		context.result(objectMapper.writeValueAsString(pList));
+		if(pList==null) {
+			context.status(400);
+			context.result("User failed login attempt");
+		}
+		else {
+			context.status(200);
+			context.result(objectMapper.writeValueAsString(pList));
+		}
+		
 	};
 	
 	
@@ -57,11 +67,25 @@ public class TicketController {
 		//tServ.updateTicket(t,s);
 		//Employee loggedIn = pServ.login(body.get("email"), body.get("password"));
 		//Ticket t = new Ticket(Integer.parseInt(body.get("id")));
-		tServ.updateTicket(body.get("email"), body.get("password"),
+		int out = tServ.updateTicket(body.get("email"), body.get("password"),
 				Integer.parseInt(body.get("id")), body.get("status"));
+		if(out==0) {
+			context.status(400);
+			context.result("User failed to login");
+		}
+		else if(out==1) {
+			context.status(200);
+			context.result("Ticket updated");
+		}
+		else if(out==2) {
+			context.status(400);
+			context.result("User is not a manager");
+		}
+		else if(out==3) {
+			context.status(400);
+			context.result("Ticket with ID does not exist");
+		}
 		
-		context.status(200);
-		context.result("Ticket updated");
 	};
 	
 	
@@ -69,9 +93,15 @@ public class TicketController {
 		//Ticket t = objectMapper.readValue(context.body(), Ticket.class);
 		Map<String, String> body = objectMapper.readValue(context.body(), LinkedHashMap.class);
 		List<Ticket> pList = tServ.getEmployeeTickets(body.get("email"), body.get("password"));
+		if(pList==null) {
+			context.status(400);
+			context.result("User failed login attempt");
+		}
+		else {
+			context.status(200);
+			context.result(objectMapper.writeValueAsString(pList));
+		}
 		
-		context.status(200);
-		context.result(objectMapper.writeValueAsString(pList));
 	};
 	
 	public Handler handleGetByStatus = (context) -> {
@@ -79,7 +109,13 @@ public class TicketController {
 		Map<String, String> body = objectMapper.readValue(context.body(), LinkedHashMap.class);
 		List<Ticket> pList = tServ.getTicketsByStatus(body.get("email"), body.get("password"),body.get("status"));
 		
-		context.status(200);
-		context.result(objectMapper.writeValueAsString(pList));
+		if(pList==null) {
+			context.status(400);
+			context.result("User failed login attempt");
+		}
+		else {
+			context.status(200);
+			context.result(objectMapper.writeValueAsString(pList));
+		}
 	};
 }

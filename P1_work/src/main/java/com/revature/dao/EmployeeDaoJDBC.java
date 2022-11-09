@@ -66,7 +66,7 @@ public class EmployeeDaoJDBC implements EmployeeDao{
 				//JDBC indexes from 1
 				p.setId(result.getInt(1));
 				
-				if(result.getInt(2) == 1) {
+				if(result.getInt(2) == 2) {
 					p.setManager(EmployeeType.manager);
 				}else {
 					p.setManager(EmployeeType.employee);
@@ -106,7 +106,7 @@ public class EmployeeDaoJDBC implements EmployeeDao{
 				p = new Employee();
 				p.setId(result.getInt(1));
 				
-				if(result.getInt(2) == 1) {
+				if(result.getInt(2) == 2) {
 					p.setManager(EmployeeType.manager);
 				}else {
 					p.setManager(EmployeeType.employee);
@@ -188,7 +188,7 @@ public class EmployeeDaoJDBC implements EmployeeDao{
 				p = new Employee();
 				p.setId(result.getInt(1));
 				
-				if(result.getInt(2) == 1) {
+				if(result.getInt(2) == 2) {
 					p.setManager(EmployeeType.manager);
 				}else {
 					p.setManager(EmployeeType.employee);

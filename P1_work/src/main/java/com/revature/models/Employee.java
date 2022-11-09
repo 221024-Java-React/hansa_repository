@@ -62,6 +62,25 @@ public class Employee {/*implements Serializable{
 		*/
 	}
 	
+	public Employee(String firstName, String lastName, String role, String email, String password) {
+		super();
+		this.firstName = firstName;
+		this.lastName = lastName;
+		//this.role = role;
+		if(role=="manager") {
+			this.role=EmployeeType.manager;
+		}
+		else {
+			this.role = EmployeeType.employee;
+		}
+		this.email = email;
+		this.password = password;
+		/*
+		Queue<Integer> pendingTickets = new LinkedList<>();
+		LinkedList<Ticket> processedTickets = new LinkedList<>();
+		*/
+	}
+	
 	public int getId() {
 		return id;
 	}
@@ -120,7 +139,16 @@ public class Employee {/*implements Serializable{
 	public void setManager(EmployeeType manager) {
 		this.role = manager;
 	}
-
+	
+	public String getRoleString() {
+		if(role==EmployeeType.manager) {
+			return "manager";
+		}
+		else {
+			return "employee";
+		}
+	}
+	
 	public String getEmail() {
 		return email;
 	}
@@ -139,7 +167,7 @@ public class Employee {/*implements Serializable{
 
 	@Override
 	public String toString() {
-		return "Person [firstName=" + firstName + ", lastName=" + lastName + ", email=" + email
+		return "Person [firstName=" + firstName + ", lastName=" + lastName + ", email=" + email + ", role=" + role
 				//+ ", password=" + password + "]";
 				+ "]";
 	}

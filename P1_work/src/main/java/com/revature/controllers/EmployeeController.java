@@ -52,7 +52,12 @@ public class EmployeeController {
 		Employee loggedIn = pServ.login(body.get("email"), body.get("password"));
 		
 		context.status(200);
-		context.result(objectMapper.writeValueAsString(loggedIn));
+		if(loggedIn!=null) {
+			context.result(loggedIn.getId() + " " + loggedIn.getEmail());
+		}
+		else {
+			context.result("Username and/or password incorrect");
+		}
 		
 	};
 }

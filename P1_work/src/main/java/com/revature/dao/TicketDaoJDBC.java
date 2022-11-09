@@ -153,7 +153,7 @@ public class TicketDaoJDBC implements TicketDao {
 			/*prepared.setString(1, t.getEmployee());
 			prepared.setString(2, t.getDescription());
 			prepared.setDouble(3, t.getAmount());*/
-			prepared.setString(1, t.getStatusString());
+			prepared.setString(1, newStatus);
 			/*prepared.setString(5, t.getEmployee());
 			prepared.setString(6, t.getDescription());
 			prepared.setDouble(7, t.getAmount());*/
@@ -188,9 +188,9 @@ public class TicketDaoJDBC implements TicketDao {
 				p.setEmployee(result.getString(2));
 				p.setDescription(result.getString(3));
 				p.setAmount(result.getDouble(4));
-				if(result.getInt(5) == 1) {
+				if(result.getString(5) == "approved") {
 					p.setStatus(TicketStatus.approved);
-				}else if(result.getInt(5) == 2){
+				}else if(result.getString(5) == "denied"){
 					p.setStatus(TicketStatus.denied);
 				}
 				else {

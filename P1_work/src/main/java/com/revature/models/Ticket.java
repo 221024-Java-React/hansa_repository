@@ -65,19 +65,6 @@ public class Ticket {
 		this.employee_email = employee_email;
 	}
 	
-	/*public void setEmployee(Employee employee_email) {
-		this.employee_email = employee_email;
-	}
-	
-	public Employee getEmployee() {
-		return employee_email;
-	}
-	
-	public String getEmployeeEmail() {
-		return employee_email.getEmail();
-	}
-	*/
-	
 	public String getStatusString() {
 		if(status==TicketStatus.pending) {
 			return "pending";
