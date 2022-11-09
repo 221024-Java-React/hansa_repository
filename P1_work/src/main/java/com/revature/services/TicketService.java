@@ -14,6 +14,7 @@ import com.revature.exceptions.TicketAlreadyUpdatedException;
 import com.revature.models.Employee;
 import com.revature.models.EmployeeType;
 import com.revature.models.Ticket;
+import com.revature.models.TicketStatus;
 import com.revature.utils.LoggingUtil;
 
 public class TicketService {
@@ -69,6 +70,10 @@ public class TicketService {
 		if(p == null) {
 			LoggingUtil.getLogger().warn("Employee with email " + t.getEmployee() + " does not exist");
 			return 0;
+		}
+		
+		if(t.getDescription()==null) {
+			return 3;
 		}
 		
 		if(password.equals(p.getPassword())) {
@@ -128,6 +133,16 @@ public class TicketService {
 		if(password.equals(p.getPassword())&& p.isManager()==EmployeeType.manager) {
 			Ticket t = new Ticket();
 			t=ticketDao.getTicketById(id);
+			if(t==null) {
+				LoggingUtil.getLogger().info("Ticket with ID " + id + " does not exist");
+				return 4;
+			}
+			//System.out.println(t.getStatus() + " ouch");
+			if(t.getStatus()!=TicketStatus.pending) {
+				System.out.println("whoh");
+				LoggingUtil.getLogger().info("Ticket with ID " + id + " cannot be updated again");
+				return 5;
+			}
 			ticketDao.updateTicket(t,s);
 			LoggingUtil.getLogger().info("User " + email + " updated ticket successfully");
 			return 1;

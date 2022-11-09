@@ -188,9 +188,10 @@ public class TicketDaoJDBC implements TicketDao {
 				p.setEmployee(result.getString(2));
 				p.setDescription(result.getString(3));
 				p.setAmount(result.getDouble(4));
-				if(result.getString(5) == "approved") {
+				System.out.println();
+				if(result.getString(5).equals("approved")) {
 					p.setStatus(TicketStatus.approved);
-				}else if(result.getString(5) == "denied"){
+				}else if(result.getString(5).equals("denied")){
 					p.setStatus(TicketStatus.denied);
 				}
 				else {

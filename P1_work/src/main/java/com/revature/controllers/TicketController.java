@@ -25,21 +25,32 @@ public class TicketController {
 	public Handler handleRegister = (context) -> {
 		Map<String, String> body = objectMapper.readValue(context.body(), LinkedHashMap.class);
 		//Ticket t = objectMapper.readValue(context.body(), Ticket.class);
-		Ticket t = new Ticket(Double.parseDouble(body.get("amount")), body.get("description"), 
-				body.get("employee_email"));
 		
-		int out = tServ.addTicket(t,body.get("password"));
-		if(out == 0) {
+		try {
+			Ticket t = new Ticket(Double.parseDouble(body.get("amount")), body.get("description"), 
+					body.get("employee_email"));
+			int out = tServ.addTicket(t,body.get("password"));
+			if(out == 0) {
+				context.status(400);
+				context.result("Employee does not exist");
+			}
+			else if(out == 1){
+				context.status(201);
+				context.result(objectMapper.writeValueAsString(t));
+			}
+			else if(out == 3) {
+				context.status(400);
+				context.result("Need to include description and amount for ticket");
+			}
+			else {
+				context.status(400);
+				context.result("Username and password inccorect");
+			}
+		}catch(NullPointerException e) {
 			context.status(400);
-			context.result("Employee does not exist");
+			context.result("Need to include description and amount for ticket");
 		}
-		else if(out ==1){
-			context.status(201);
-			context.result(objectMapper.writeValueAsString(t));
-		}
-		else {
-			
-		}
+		
 	};
 	
 	public Handler handleGetAll = (context) -> {
@@ -83,9 +94,16 @@ public class TicketController {
 		}
 		else if(out==3) {
 			context.status(400);
+			context.result("User failed to login");
+		}
+		else if(out==4) {
+			context.status(400);
 			context.result("Ticket with ID does not exist");
 		}
-		
+		else if(out==5) {
+			context.status(400);
+			context.result("Ticket cannot be updated because it has already been updated");
+		}
 	};
 	
 	

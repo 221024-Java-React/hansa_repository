@@ -4,8 +4,10 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.revature.exceptions.EmployeeAlreadyExistsException;
 import com.revature.models.Employee;
 import com.revature.services.EmployeeService;
+import com.revature.utils.LoggingUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.javalin.http.Handler;
@@ -29,12 +31,14 @@ public class EmployeeController {
 		//To get access to that body we use context.body()
 		//To convert our body to a java object we will use the object mapper
 		Employee p = objectMapper.readValue(context.body(), Employee.class);
-		
-		pServ.registerEmployee(p);
-		
-		//Set our status code to OK
-		context.status(201);
-		context.result(objectMapper.writeValueAsString(p));
+		try {
+			pServ.registerEmployee(p);
+			context.status(201);
+			context.result(objectMapper.writeValueAsString(p));
+		} catch(EmployeeAlreadyExistsException e) {
+			context.status(400);
+			context.result("Username with email " + p.getEmail() + " already exists");
+		} 
 		
 	};
 	
@@ -51,11 +55,13 @@ public class EmployeeController {
 		//Employee loggedIn = pServ.login(body.get("email"));
 		Employee loggedIn = pServ.login(body.get("email"), body.get("password"));
 		
-		context.status(200);
+		
 		if(loggedIn!=null) {
+			context.status(200);
 			context.result(loggedIn.getId() + " " + loggedIn.getEmail());
 		}
 		else {
+			context.status(400);
 			context.result("Username and/or password incorrect");
 		}
 		

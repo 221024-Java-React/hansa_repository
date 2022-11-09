@@ -19,23 +19,14 @@ public class EmployeeService {
 	}
 	
 	public void registerEmployee(Employee p) {
-		/*
-		try {
-			employeeDao.getEmployeeByEmail(p.getEmail());
-			//Throw an exception if the user exists when trying to register
-			LoggingUtil.getLogger().warn("User with email " + p.getEmail() + " tried registering again");
-		} catch (EmployeeDoesNotExistException e) {
-			employeeDao.addEmployee(p);
-			LoggingUtil.getLogger().info("New user registed");
-		}
-		*/
+		
 		try {
 			employeeDao.addEmployee(p);
 			LoggingUtil.getLogger().warn("User: " + p + " was registered");
 		} catch(Exception e) {
 			LoggingUtil.getLogger().warn("User with email " + p.getEmail() + " tried to register a second time");
 			throw new EmployeeAlreadyExistsException();
-		}
+		} 
 	}
 	
 	public Employee login(String email, String password) {
